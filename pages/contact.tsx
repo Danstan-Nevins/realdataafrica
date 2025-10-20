@@ -1,63 +1,87 @@
-// pages/contact.tsx
-import { useState } from "react";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-type FormState = { name: string; email: string; message: string; phone?: string };
+export default function ContactPage() {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState('');
 
-export default function Contact() {
-  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "", phone: "" });
-  const [status, setStatus] = useState<string | null>(null);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  async function submit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("sending");
+    setStatus('Sending...');
+
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
+
+      const data = await res.json();
       if (res.ok) {
-        setStatus("sent");
-        setForm({ name: "", email: "", message: "", phone: "" });
+        setStatus('✅ Message sent successfully!');
+        setFormData({ name: '', email: '', message: '' });
       } else {
-        setStatus("error");
+        setStatus(`❌ ${data.error || 'Failed to send message'}`);
       }
     } catch (err) {
-      setStatus("error");
+      console.error(err);
+      setStatus('❌ Network error');
     }
-  }
+  };
 
   return (
-    <div className="container mx-auto px-6 py-12">
-      <h1 className="text-3xl font-bold text-primary">Contact</h1>
-      <p className="mt-2 text-gray-600">Send us a message or reach us directly via WhatsApp or email.</p>
-
-      <div className="mt-6 grid md:grid-cols-2 gap-8">
-        <form onSubmit={submit} className="bg-white p-6 rounded-md shadow">
-          <label className="block">Name<input required value={form.name} onChange={e=>setForm({...form, name: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" /></label>
-          <label className="block mt-4">Email<input required value={form.email} onChange={e=>setForm({...form, email: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" type="email"/></label>
-          <label className="block mt-4">Phone<input value={form.phone} onChange={e=>setForm({...form, phone: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" /></label>
-          <label className="block mt-4">Message<textarea required value={form.message} onChange={e=>setForm({...form, message: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded h-32"/></label>
-
-          <div className="mt-4">
-            <button className="bg-accent text-primary px-4 py-2 rounded font-semibold" type="submit">Send Message</button>
-          </div>
-
-          {status === "sending" && <p className="mt-3 text-sm text-gray-600">Sending...</p>}
-          {status === "sent" && <p className="mt-3 text-sm text-green-600">Message sent. We'll get back to you.</p>}
-          {status === "error" && <p className="mt-3 text-sm text-red-600">Error sending message. Try again later.</p>}
-        </form>
-
-        <div className="p-6">
-          <h4 className="font-semibold">Direct Contact</h4>
-          <p className="mt-2 text-gray-700">Email: <a href="mailto:realdataafrica@gmail.com" className="underline">realdataafrica@gmail.com</a></p>
-          <p className="mt-1 text-gray-700">CEO: <a href="mailto:danstanvannevins@gmail.com" className="underline">danstanvannevins@gmail.com</a></p>
-          <p className="mt-1 text-gray-700">WhatsApp: <a href="https://wa.me/254758412009" className="underline">+254 758 412009</a></p>
-
-          <h4 className="font-semibold mt-6">Visit Us</h4>
-          <p className="text-gray-700 mt-2">Nairobi (Private Bag). For meetings, please schedule ahead via email or WhatsApp.</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-100 py-12 px-6 flex flex-col items-center justify-center">
+      <motion.h1
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="text-4xl font-bold mb-6 text-[#07132A]"
+      >
+        Contact Us
+      </motion.h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md"
+          required
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={formData.message}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md h-32"
+          required
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          type="submit"
+          className="bg-[#06B6D4] text-white w-full py-3 rounded-md font-semibold"
+        >
+          Send Message
+        </motion.button>
+        <p className="text-center text-gray-600 mt-4">{status}</p>
+      </form>
     </div>
   );
 }

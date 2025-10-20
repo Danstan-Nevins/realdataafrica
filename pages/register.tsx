@@ -1,45 +1,87 @@
-// pages/register.tsx
-import { useState } from "react";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-export default function Register() {
-  const [form, setForm] = useState({ name: "", email: "", org: "", note: "" });
-  const [status, setStatus] = useState<string | null>(null);
+export default function RegisterPage() {
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [status, setStatus] = useState('');
 
-  async function submit(e: React.FormEvent) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("sending");
+    setStatus('Submitting...');
+
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
+
+      const data = await res.json();
       if (res.ok) {
-        setStatus("sent");
-        setForm({ name: "", email: "", org: "", note: "" });
-      } else setStatus("error");
+        setStatus('✅ Registration successful!');
+        setFormData({ name: '', email: '', phone: '' });
+      } else {
+        setStatus(`❌ ${data.error || 'Submission failed'}`);
+      }
     } catch (err) {
-      setStatus("error");
+      console.error(err);
+      setStatus('❌ Network error');
     }
-  }
+  };
 
   return (
-    <div className="container mx-auto px-6 py-12">
-      <h1 className="text-3xl font-bold text-primary">Register Interest</h1>
-      <p className="mt-2 text-gray-600">Join our waitlist for pilots, demos and enterprise onboarding.</p>
-
-      <form onSubmit={submit} className="mt-6 bg-white p-6 rounded shadow max-w-2xl">
-        <label className="block">Name<input required value={form.name} onChange={e=>setForm({...form, name: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" /></label>
-        <label className="block mt-4">Email<input required value={form.email} onChange={e=>setForm({...form, email: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" type="email"/></label>
-        <label className="block mt-4">Organization<input value={form.org} onChange={e=>setForm({...form, org: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded" /></label>
-        <label className="block mt-4">Note<textarea value={form.note} onChange={e=>setForm({...form, note: e.target.value})} className="mt-2 w-full border px-3 py-2 rounded h-28" /></label>
-        <div className="mt-4">
-          <button className="bg-accent text-primary px-4 py-2 rounded font-semibold" type="submit">Register</button>
-        </div>
-
-        {status === "sending" && <p className="mt-3 text-sm">Sending...</p>}
-        {status === "sent" && <p className="mt-3 text-sm text-green-600">Thanks — you are registered.</p>}
-        {status === "error" && <p className="mt-3 text-sm text-red-600">Error. Try again later.</p>}
+    <div className="min-h-screen bg-gray-100 py-12 px-6 flex flex-col items-center justify-center">
+      <motion.h1
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="text-4xl font-bold mb-6 text-[#07132A]"
+      >
+        Register With Us
+      </motion.h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md"
+          required
+        />
+        <input
+          type="tel"
+          name="phone"
+          placeholder="Phone Number"
+          value={formData.phone}
+          onChange={handleChange}
+          className="w-full mb-4 border p-3 rounded-md"
+          required
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          type="submit"
+          className="bg-[#06B6D4] text-white w-full py-3 rounded-md font-semibold"
+        >
+          Register
+        </motion.button>
+        <p className="text-center text-gray-600 mt-4">{status}</p>
       </form>
     </div>
   );

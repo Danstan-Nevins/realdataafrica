@@ -1,33 +1,47 @@
-// pages/api/register.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import { promises as fs } from "fs";
-import path from "path";
+import { NextApiRequest, NextApiResponse } from 'next';
+import path from 'path';
+import fs from 'fs';
 
-type Reg = { name: string; email: string; org?: string; note?: string; createdAt: string };
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    const { name, email, phone } = req.body;
 
-const DATA_FILE = path.join(process.cwd(), "data", "registrations.json");
+    if (!name || !email || !phone) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
 
-async function ensureDataFile() {
-  try {
-    await fs.access(DATA_FILE);
-  } catch {
-    await fs.mkdir(path.join(process.cwd(), "data"), { recursive: true });
-    await fs.writeFile(DATA_FILE, JSON.stringify([]), "utf8");
+    try {
+      // Ensure data directory exists
+      const dirPath = path.join(process.cwd(), 'data');
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath);
+      }
+
+      const filePath = path.join(dirPath, 'registrations.json');
+
+      // Read existing registrations or start with empty array
+      const existingData = fs.existsSync(filePath)
+        ? JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        : [];
+
+      // Add new registration
+      existingData.push({
+        name,
+        email,
+        phone,
+        date: new Date().toISOString(),
+      });
+
+      // Write updated data
+      fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
+
+      return res.status(200).json({ success: true, message: 'Registration successful!' });
+    } catch (error) {
+      console.error('Error saving registration:', error);
+      return res.status(500).json({ error: 'Failed to save registration.' });
+    }
+  } else {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-
-  const { name, email, org, note } = req.body;
-  if (!name || !email) return res.status(400).json({ error: "Missing fields" });
-
-  await ensureDataFile();
-  const raw = await fs.readFile(DATA_FILE, "utf8");
-  const list: Reg[] = JSON.parse(raw || "[]");
-  const entry: Reg = { name, email, org, note, createdAt: new Date().toISOString() };
-  list.unshift(entry);
-  await fs.writeFile(DATA_FILE, JSON.stringify(list, null, 2), "utf8");
-
-  return res.status(200).json({ ok: true });
 }
