@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+.next/
+out/
+data/
+.env
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
