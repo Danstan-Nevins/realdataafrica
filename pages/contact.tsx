@@ -1,87 +1,53 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { FaEnvelope, FaWhatsapp, FaFacebook } from "react-icons/fa";
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('Sending...');
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setStatus('✅ Message sent successfully!');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setStatus(`❌ ${data.error || 'Failed to send message'}`);
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus('❌ Network error');
-    }
-  };
-
+export default function Contact() {
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-6 flex flex-col items-center justify-center">
-      <motion.h1
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="text-4xl font-bold mb-6 text-[#07132A]"
-      >
-        Contact Us
-      </motion.h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md"
-          required
-        />
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md h-32"
-          required
-        />
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          type="submit"
-          className="bg-[#06B6D4] text-white w-full py-3 rounded-md font-semibold"
+    <div className="min-h-screen bg-gray-50 py-16 px-6 sm:px-12 text-center">
+      <h1 className="text-4xl font-bold mb-6 text-gray-800">Get in Touch</h1>
+      <p className="text-lg text-gray-600 mb-10">
+        We’d love to hear from you! Reach out to us through any of the channels below.
+      </p>
+
+      <div className="flex flex-col items-center space-y-6">
+        {/* Email */}
+        <a
+          href="mailto:info@realdataafrica@gmail.com"
+          className="flex items-center space-x-3 text-blue-600 hover:text-blue-800"
         >
-          Send Message
-        </motion.button>
-        <p className="text-center text-gray-600 mt-4">{status}</p>
-      </form>
+          <FaEnvelope size={24} />
+          <span>info@realdataafrica@gmail.com</span>
+        </a>
+
+        {/* WhatsApp */}
+        <a
+          href="https://wa.me/254758412009"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-3 text-green-600 hover:text-green-800"
+        >
+          <FaWhatsapp size={24} />
+          <span>+254 758 412 009</span>
+        </a>
+
+        {/* Facebook */}
+        <a
+          href="https://www.facebook.com/NevinsVanSten"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-3 text-blue-700 hover:text-blue-900"
+        >
+          <FaFacebook size={24} />
+          <span>Nevins Van Sten</span>
+        </a>
+      </div>
+
+      <p className="mt-12 text-gray-500">
+        Or visit our main site at{" "}
+        <a href="https://realdataafrica.netlify.app" className="text-blue-600 hover:underline">
+          realdataafrica.netlify.app
+        </a>
+      </p>
     </div>
   );
 }
