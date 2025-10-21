@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://realdataafrica.netlify.app/sitemap.xml
