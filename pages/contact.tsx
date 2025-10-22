@@ -1,92 +1,65 @@
-import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaWhatsapp, FaEnvelope, FaFacebook } from "react-icons/fa";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // EmailJS link (for sending email without backend)
-    const mailtoLink = `mailto:realdataafrica@gmail.com?subject=Message from ${formData.name}&body=${encodeURIComponent(formData.message)}%0A%0AFrom: ${formData.email}`;
-    window.location.href = mailtoLink;
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-10 px-4">
-      <h1 className="text-4xl font-bold text-gray-900 mb-6">Get in Touch</h1>
-      <p className="text-lg text-gray-700 mb-8 text-center max-w-xl">
-        Reach out to <strong>RealData Africa</strong> — we’d love to hear from you!  
-        Use the form below, or contact us directly through WhatsApp or Facebook.
-      </p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-100 flex flex-col items-center justify-center p-6">
+      <motion.h1
+        className="text-4xl md:text-5xl font-bold mb-8 text-center"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        Get in Touch with <span className="text-blue-400">RealData Africa</span>
+      </motion.h1>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full mb-4 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+      <motion.div
+        className="bg-gray-800/60 backdrop-blur-md rounded-2xl p-8 shadow-lg w-full max-w-lg space-y-6 text-center"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+      >
+        <p className="text-gray-300 text-lg">
+          We’d love to hear from you. Reach out to us anytime via email, WhatsApp, or Facebook.
+        </p>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full mb-4 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="flex flex-col gap-4 items-center mt-6">
+          {/* Email */}
+          <a
+            href="mailto:realdataafrica@gmail.com"
+            className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-full text-white font-medium"
+          >
+            <FaEnvelope size={22} />
+            realdataafrica@gmail.com
+          </a>
 
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full mb-4 border border-gray-300 rounded-md p-3 h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+          {/* WhatsApp */}
+          <a
+            href="https://wa.me/254758412009"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full text-white font-medium"
+          >
+            <FaWhatsapp size={22} />
+            +254 758 412009
+          </a>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-200"
-        >
-          Send Message
-        </button>
-      </form>
+          {/* Facebook */}
+          <a
+            href="https://facebook.com/NevinsVanSten"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-blue-800 hover:bg-blue-900 transition px-6 py-3 rounded-full text-white font-medium"
+          >
+            <FaFacebook size={22} />
+            Nevins Van Sten
+          </a>
+        </div>
 
-      <div className="mt-8 text-center space-y-3">
-        <a
-          href="https://wa.me/254758412009"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block text-green-600 font-semibold hover:underline"
-        >
-          💬 Chat on WhatsApp
-        </a>
-
-        <a
-          href="mailto:realdataafrica@gmail.com"
-          className="block text-blue-600 font-semibold hover:underline"
-        >
-          📧 Send Email
-        </a>
-
-        <a
-          href="https://facebook.com/NevinsVanSten"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block text-blue-800 font-semibold hover:underline"
-        >
-          🔗 Visit Facebook
-        </a>
-      </div>
+        <p className="mt-8 text-sm text-gray-400">
+          © 2025 RealData Africa — Connecting data, people, and progress.
+        </p>
+      </motion.div>
     </div>
   );
 }
