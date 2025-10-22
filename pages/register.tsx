@@ -1,88 +1,97 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
 
-export default function RegisterPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
-  const [status, setStatus] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('Submitting...');
-
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setStatus('✅ Registration successful!');
-        setFormData({ name: '', email: '', phone: '' });
-      } else {
-        setStatus(`❌ ${data.error || 'Submission failed'}`);
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus('❌ Network error');
-    }
-  };
-
+export default function Register() {
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-6 flex flex-col items-center justify-center">
-      <motion.h1
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="text-4xl font-bold mb-6 text-[#07132A]"
-      >
-        Register With Us
-      </motion.h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md"
-          required
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-          className="w-full mb-4 border p-3 rounded-md"
-          required
-        />
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          type="submit"
-          className="bg-[#06B6D4] text-white w-full py-3 rounded-md font-semibold"
+    <section className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
+      <div className="max-w-2xl w-full bg-white shadow-xl rounded-2xl p-8">
+        <h1 className="text-4xl font-bold text-center text-[#07132A] mb-6">
+          Register Your Interest
+        </h1>
+        <p className="text-center text-gray-600 mb-6">
+          Join the RealData Africa network. Get early access to property data tools and insights.
+        </p>
+
+        <form
+          action="https://formsubmit.co/realdataafrica@gmail.com"
+          method="POST"
+          className="space-y-5"
         >
-          Register
-        </motion.button>
-        <p className="text-center text-gray-600 mt-4">{status}</p>
-      </form>
-    </div>
+          <input
+            type="text"
+            name="fullname"
+            placeholder="Full Name"
+            required
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            required
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+          />
+          <textarea
+            name="message"
+            placeholder="Additional Info (optional)"
+            rows={4}
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+          ></textarea>
+
+          {/* ✅ Redirect to thank you page */}
+          <input
+            type="hidden"
+            name="_next"
+            value="https://realdataafrica.netlify.app/thankyou"
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition font-semibold"
+          >
+            Register Now
+          </button>
+        </form>
+
+        <div className="mt-8 text-center text-gray-700 space-y-2">
+          <p>
+            📧{" "}
+            <a
+              href="mailto:realdataafrica@gmail.com"
+              className="text-[#06B6D4] hover:underline"
+            >
+              realdataafrica@gmail.com
+            </a>
+          </p>
+          <p>
+            💬{" "}
+            <a
+              href="https://wa.me/254758412009"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#06B6D4] hover:underline"
+            >
+              WhatsApp: +254 758 412009
+            </a>
+          </p>
+          <p>
+            🌐{" "}
+            <a
+              href="https://facebook.com/NevinsVanSten"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#06B6D4] hover:underline"
+            >
+              Facebook: Nevins Van Sten
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
