@@ -1,21 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Enable static export
-  reactStrictMode: true,
-
+  output: 'export',
   images: {
-    unoptimized: true, // ✅ Disable image optimization for static export
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.pexels.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.unsplash.com',
-      },
-    ],
+    unoptimized: true,
   },
+  trailingSlash: true,
+  basePath: '',
 };
 
 module.exports = nextConfig;
