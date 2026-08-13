@@ -2,6 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --rda-black: #050505;
+  --rda-dark: #0c0c0c;
+  --rda-gold: #d4af37;
+  --rda-gold-light: #f1d77a;
+  --rda-white: #ffffff;
+  --rda-muted: #9ca3af;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-gray-50 text-gray-900;
+  @apply bg-black text-white antialiased;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--rda-gold);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rda-gold);
+}
+
+@layer components {
+  .rda-container {
+    @apply container mx-auto px-6;
+  }
+
+  .rda-glass {
+    @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+
+  .rda-button-primary {
+    @apply inline-flex items-center justify-center rounded-xl px-7 py-4 font-bold transition-all duration-300;
+    background: var(--rda-gold);
+    color: #050505;
+  }
+
+  .rda-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.25);
+  }
+
+  .rda-button-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-4 font-semibold text-white transition-all duration-300;
+  }
+
+  .rda-button-secondary:hover {
+    @apply bg-white/10 border-white/40;
+    transform: translateY(-2px);
+  }
+
+  .rda-section-label {
+    @apply uppercase tracking-[0.25em] text-sm font-semibold;
+    color: var(--rda-gold);
+  }
 }
